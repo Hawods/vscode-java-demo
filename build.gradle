@@ -1,0 +1,68 @@
+buildscript {
+	repositories {
+		maven { url 'https://maven.aliyun.com/repository/public/' }
+		maven { url 'https://maven.aliyun.com/repository/spring-plugin/'}
+		mavenCentral()
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.2.6.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+	id 'eclipse'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+}
+
+repositories {
+	maven { url 'https://maven.aliyun.com/repository/public/' }
+	maven { url 'https://maven.aliyun.com/repository/spring/'}
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
+
+// 将eclipse编辑结果与gradle编辑结果合并
+eclipse {
+  classpath {
+		defaultOutputDir = file("build")
+		file.whenMerged {
+			entries.each { entry ->
+				if (entry.kind == 'src' && entry.hasProperty('output')) {
+					switch(entry.path) {
+						case 'src/main/java':
+							entry.output = sourceSets.main.java.outputDir.toString().replace(buildDir.toString(), 'build')
+							break;
+						case 'src/main/resources':
+							entry.output = sourceSets.main.output.resourcesDir.toString().replace(buildDir.toString(), 'build')
+							break;
+						case 'src/test/java':
+							entry.output = sourceSets.test.java.outputDir.toString().replace(buildDir.toString(), 'build')
+							break;
+					}
+				}
+			}
+		}
+  }
+}
