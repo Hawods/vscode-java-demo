@@ -60,6 +60,11 @@ eclipse {
 						case 'src/test/java':
 							entry.output = sourceSets.test.java.outputDir.toString().replace(buildDir.toString(), 'build')
 							break;
+						case 'src/test/resources':
+							entry.output = sourceSets.test.output.resourcesDir.toString().replace(buildDir.toString(), 'build')
+							break;
+						default: 
+							entry.output = entry.output.replace('bin/', 'build/eclipse/');
 					}
 				}
 			}
